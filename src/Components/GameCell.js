@@ -1,9 +1,13 @@
 import React ,{useState,useEffect} from "react";
-import { Button } from "@mui/material";
 import QuadBackground from "./QuadBackground";
 import myImage from "../Data/image.png";
 import Hexagon from "./Hexagon";
 import textdef from "../Data/TexteDef";
+import BoxSxColorCh from "../Styles/BoxSxColorCh";
+import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
+import ClearIcon from '@mui/icons-material/Clear';
+import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
 function Typewriter({ text, speed = 1000 }) {
   const [displayedText, setDisplayedText] = useState('');
 
@@ -28,7 +32,8 @@ function Typewriter({ text, speed = 1000 }) {
       color: 'white', 
       whiteSpace: 'pre-wrap', 
       margin: 0, 
-      textAlign: 'center'
+      textAlign: 'center',
+      direction: "rtl"
     }}>
       {lines.map((line, index) => (
         <span key={index}>
@@ -235,6 +240,20 @@ const cells5 = lettersGrid[4];
       <h1 style={{ color: "#8b0000", direction: "rtl", textAlign: "right" }}>
   قائمة الاختيارات : "{selectedLetter}"
 </h1>
+<div 
+ style={{
+      display:"flex",
+      flexDirection: "row",
+      gap: "10px",
+      justifyContent: "flex-end",
+  }}
+>
+  <BoxSxColorCh main={'#00ff00'} dark={'#32cd32'} text={'اعادة ترتيب'} Icon={ChangeCircleIcon} textCol={'black'}/>
+  <BoxSxColorCh main={'#2f2c2c'} dark={'#000'} text={'تغيير المكان'} Icon={SyncAltIcon} textCol={'white'}/>
+  <BoxSxColorCh main={'#fbfbfbff'} dark={'#fff8dc'} text={'حذف اللون'} Icon={ClearIcon} textCol={'black'}/>
+  <BoxSxColorCh main={'#0066CC'} dark={'blue'} text={'تلوين بالازرق'} Icon={FormatColorFillIcon} textCol={'white'}/>
+  <BoxSxColorCh main={'#ef6868ff'} dark={'red'} text={'تلوين بالاحمر'} Icon={FormatColorFillIcon} textCol={'white'}/>
+</div>
 </div>
 
 <div style={{ margin: 10, display: showDiv2 ? "block" : "none",textAlign: "right" ,width: "100%"}}>
@@ -243,7 +262,7 @@ const cells5 = lettersGrid[4];
 <h3>كما يمكنك المشاركة في بثنا المباشر على منصة تيك توك للتمتع بالالعاب الثقافية مع مجموعتنا </h3>
 <a 
   href="https://www.tiktok.com/@bayto_chi3r?is_from_webapp=1&sender_device=pc" 
-  target="_blank"  // باش يفتح في تاب جديد
+  target="_blank"  
   rel="noopener noreferrer" 
   style={{ color: "#8b0000", textDecoration: "underline" }}
 >
