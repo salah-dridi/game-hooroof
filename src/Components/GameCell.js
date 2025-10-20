@@ -71,16 +71,16 @@ const arabicLetters = [
   "ك", "ل", "م", "ن", "ه", "و", "ي"
 ];
 const getRandomArabicLetters = () => {
-  const letters = [...arabicLetters];
+  const letters = [...arabicLetters]; // نسخة من المصفوفة الأصلية
   const selected = [];
 
   while (selected.length < 25) {
     const randomIndex = Math.floor(Math.random() * letters.length);
     selected.push(letters[randomIndex]);
-    letters.splice(randomIndex, 1); 
+    letters.splice(randomIndex, 1); // نحذف الحرف المختار
   }
 
-  return selected;
+ return [...selected, ...letters];
 };
 
 const [lettersGrid2,setLettersGrid2] = useState(() => {
@@ -101,7 +101,7 @@ const changeColor = (col) => {
 const changePlace = (cell, index) => {
   setOpen(false)
   Swal.fire({
-    title: `هل تريد حقا تغيير حرف "${selectedLetter[0]?.letter}" بحرف "${cell.letter}"؟`,
+    title: `هل تريد حقا تغيير حرف "${selectedLetter[0]?.letter}" بحرف "${cell.letter}" ؟`,
     icon: "question",
     showCancelButton: true,
     confirmButtonText: "تأكيد",
@@ -414,7 +414,7 @@ const resetGrid = () => {
       }}
       onClick={() => setOpen(true)}
     >
-  <BoxSxColorCh main={'#2f2c2c'} dark={'#000'} text={'تغيير المكان'} Icon={SyncAltIcon} textCol={'white'}/>
+  <BoxSxColorCh main={'#2f2c2c'} dark={'#000'} text={'تغيير'} Icon={SyncAltIcon} textCol={'white'}/>
   </button>
   
  
@@ -440,7 +440,7 @@ const resetGrid = () => {
 </div>
 
     </div>
-    <Drawer
+   <Drawer
   anchor="right"
   open={open}
   onClose={() => setOpen(false)}
@@ -457,9 +457,9 @@ const resetGrid = () => {
     تغيير حرف "{selectedLetter[0]?.letter}"
   </h2>
 
-  {[0, 5, 10, 15, 20].map((start) => (
+  {Array.from({ length: Math.ceil(lettersGrid2.length / 5) }).map((_, rowIndex) => (
     <div
-      key={start}
+      key={rowIndex}
       style={{
         display: "flex",
         flexWrap: "wrap",
@@ -468,28 +468,30 @@ const resetGrid = () => {
         padding: "10px",
       }}
     >
-      {lettersGrid2.slice(start, start + 5).map((cell, index) => (
-        <div
-          key={index}
-          style={{
-            width: "45px",
-            height: "45px",
-            borderRadius: "50%",
-            backgroundColor: "white",
-            color: "black",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontWeight: "bold",
-            fontSize: "1.3rem",
-            boxShadow: "0 0 4px rgba(0,0,0,0.3)",
-            cursor: "pointer",
-          }}
-           onClick={() => changePlace(cell, index + start)}
-        >
-          {cell.letter}
-        </div>
-      ))}
+      {lettersGrid2
+        .slice(rowIndex * 5, rowIndex * 5 + 5)
+        .map((cell, index) => (
+          <div
+            key={index}
+            style={{
+              width: "45px",
+              height: "45px",
+              borderRadius: "50%",
+              backgroundColor: "white",
+              color: "black",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: "bold",
+              fontSize: "1.3rem",
+              boxShadow: "0 0 4px rgba(0,0,0,0.3)",
+              cursor: "pointer",
+            }}
+            onClick={() => changePlace(cell, index + rowIndex * 5)}
+          >
+            {cell.letter}
+          </div>
+        ))}
     </div>
   ))}
 </Drawer>
