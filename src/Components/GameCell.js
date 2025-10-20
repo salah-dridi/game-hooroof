@@ -1,4 +1,5 @@
 import React ,{useState,useEffect} from "react";
+import { Drawer, Button, List, ListItem, ListItemText } from "@mui/material";
 import QuadBackground from "./QuadBackground";
 import myImage from "../Data/image.png";
 import Hexagon from "./Hexagon";
@@ -8,6 +9,8 @@ import FormatColorFillIcon from '@mui/icons-material/FormatColorFill';
 import ClearIcon from '@mui/icons-material/Clear';
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import Swal from 'sweetalert2';
 function Typewriter({ text, speed = 1000 }) {
   const [displayedText, setDisplayedText] = useState('');
 
@@ -47,16 +50,16 @@ function Typewriter({ text, speed = 1000 }) {
 }
 
 const GameRow = () => {
+  const [open, setOpen] = useState(false);
   const [showDiv1, setShowDiv1] = useState(false); 
 const [showDiv2, setShowDiv2] = useState(true); 
-const [selectedLetter,setSelectedLetter]=useState(null) ;
-
-const toggleDivs = (letter) => {
+const [selectedLetter,setSelectedLetter]=useState([]) ;
+const toggleDivs = (cell,index) => {
   if(showDiv2){
     setShowDiv1(true);   
   setShowDiv2(false); 
   }
-setSelectedLetter(letter);
+setSelectedLetter([cell,index]);
    
 };
 
@@ -80,22 +83,59 @@ const getRandomArabicLetters = () => {
   return selected;
 };
 
-const [lettersGrid] = useState(() => {
+const [lettersGrid2,setLettersGrid2] = useState(() => {
   const arabicLettersUsed = getRandomArabicLetters();
-  return [
-    arabicLettersUsed.slice(0, 5),
-    arabicLettersUsed.slice(5, 10),
-    arabicLettersUsed.slice(10, 15),
-    arabicLettersUsed.slice(15, 20),
-    arabicLettersUsed.slice(20, 25)
-  ];
+  const withColor = arabicLettersUsed.map(letter => ({
+    letter: letter,
+    color: "#fff8dc"
+  }));
+  return withColor;
 });
 
-const cells1 = lettersGrid[0];
-const cells2 = lettersGrid[1];
-const cells3 = lettersGrid[2];
-const cells4 = lettersGrid[3];
-const cells5 = lettersGrid[4];
+const changeColor = (col) => {
+  let newCells=[...lettersGrid2]
+  newCells[selectedLetter[1]].color=col
+  setLettersGrid2(newCells)
+
+};
+const changePlace = (cell, index) => {
+  setOpen(false)
+  Swal.fire({
+    title: `هل تريد حقا تغيير حرف "${selectedLetter[0]?.letter}" بحرف "${cell.letter}"؟`,
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonText: "تأكيد",
+    cancelButtonText: "رفض",
+    reverseButtons: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      let selletter=[...selectedLetter]
+      selletter[1]=index
+      let newCells=[...lettersGrid2]
+      newCells[selectedLetter[1]]=cell
+      newCells[index]=selectedLetter[0]
+      setSelectedLetter(selletter)
+      setLettersGrid2(newCells)
+    } else {
+      setOpen(true)
+    }
+  });
+};
+const resetGrid = () => {
+  const arabicLettersUsed = getRandomArabicLetters();
+  const withColor = arabicLettersUsed.map(letter => ({
+    letter: letter,
+    color: "#fff8dc"
+  }));
+
+  setSelectedLetter([]);
+  setLettersGrid2(withColor)
+  if(showDiv1){
+    setShowDiv1(false);   
+  setShowDiv2(true); 
+  }
+};
+
   return (
     <div 
     style={{
@@ -124,7 +164,7 @@ const cells5 = lettersGrid[4];
         left: "59%",
         transform: "translate(-60%, -50%)"
       }}>
-        {cells1.map((_, index) => (
+         {lettersGrid2.slice(0, 5).map((cell, index) => (
            <button 
       key={index} 
       style={{
@@ -133,9 +173,9 @@ const cells5 = lettersGrid[4];
         padding: 0,
         cursor: "pointer"
       }}
-      onClick={() => toggleDivs(cells1[index])}
+      onClick={() => toggleDivs(cell,index)}
     >
-          <Hexagon letter={cells1[index]}/>
+          <Hexagon letter={cell.letter} bg={cell.color}/>
           </button>
         ))}
       </div>
@@ -148,7 +188,7 @@ const cells5 = lettersGrid[4];
         left: "52.7%",
         transform: "translate(-60%, -50%)"
       }}>
-        {cells2.map((_, index) => (
+        {lettersGrid2.slice(5, 10).map((cell, index) => (
           <button 
       key={index} 
       style={{
@@ -157,9 +197,9 @@ const cells5 = lettersGrid[4];
         padding: 0,
         cursor: "pointer"
       }}
-      onClick={() => toggleDivs(cells2[index])}
+      onClick={() => toggleDivs(cell,index+5)}
     >
-          <Hexagon letter={cells2[index]}/>
+          <Hexagon letter={cell.letter} bg={cell.color}/>
           </button>
         ))}
       </div>
@@ -172,7 +212,7 @@ const cells5 = lettersGrid[4];
         left: "59%",
         transform: "translate(-60%, -50%)"
       }}>
-        {cells3.map((_, index) => (
+        {lettersGrid2.slice(10, 15).map((cell, index) => (
           <button 
       key={index} 
       style={{
@@ -181,9 +221,9 @@ const cells5 = lettersGrid[4];
         padding: 0,
         cursor: "pointer"
       }}
-      onClick={() => toggleDivs(cells3[index])}
+      onClick={() => toggleDivs(cell,index+10)}
     >
-          <Hexagon letter={cells3[index]}/>
+          <Hexagon letter={cell.letter} bg={cell.color}/>
           </button>
         ))}
       </div>
@@ -196,7 +236,7 @@ const cells5 = lettersGrid[4];
         left: "52.7%",
         transform: "translate(-60%, -50%)"
       }}>
-        {cells4.map((_, index) => (
+        {lettersGrid2.slice(15, 20).map((cell, index) => (
          <button 
       key={index} 
       style={{
@@ -205,9 +245,9 @@ const cells5 = lettersGrid[4];
         padding: 0,
         cursor: "pointer"
       }}
-      onClick={() => toggleDivs(cells4[index])}
+      onClick={() => toggleDivs(cell,index+15)}
     >
-          <Hexagon letter={cells4[index]}/>
+          <Hexagon letter={cell.letter} bg={cell.color}/>
           </button>
         ))}
       </div>
@@ -220,7 +260,7 @@ const cells5 = lettersGrid[4];
         left: "59%",
         transform: "translate(-60%, -50%)"
       }}>
-        {cells5.map((_, index) => (
+        {lettersGrid2.slice(20, 25).map((cell, index) => (
           <button 
       key={index} 
       style={{
@@ -229,30 +269,155 @@ const cells5 = lettersGrid[4];
         padding: 0,
         cursor: "pointer"
       }}
-      onClick={() => toggleDivs(cells5[index])}
+      onClick={() => toggleDivs(cell,index+20)}
     >
-          <Hexagon letter={cells5[index]}/>
+          <Hexagon letter={cell.letter} bg={cell.color}/>
           </button>
         ))}
       </div>
     </div>
-    <div style={{ margin: 10, display: showDiv1 ? "block" : "none" ,textAlign: "right" ,width: "100%"}}>
+    <div style={{margin:10, display: showDiv2 ? "block" : "none"}}>
+     <button 
+      style={{
+       background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    width: 75,   // نفس العرض متاع Box
+    height: 75,  // نفس الطول متاع Box
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+      }}
+      onClick={resetGrid}
+    >
+  <BoxSxColorCh main={'#00ff00'} dark={'#32cd32'} text={'اعادة ترتيب'} Icon={ChangeCircleIcon} textCol={'black'}/>
+  </button>
+  </div>
+    <div style={{ margin: 10, display: showDiv1 ? "flex" : "none" ,textAlign: "right" ,width: "100%",flexDirection:"row-reverse"}}>
+      <div style={{width :600,}}>
       <h1 style={{ color: "#8b0000", direction: "rtl", textAlign: "right" }}>
-  قائمة الاختيارات : "{selectedLetter}"
+  قائمة الاختيارات : "{selectedLetter[0]?.letter}"
 </h1>
+<div style={{
+  width:600,
+  height:90,
+  backgroundColor:'red',
+  background: "linear-gradient(to bottom, #808080, #000000)",
+  borderRadius:10
+  }}>
+
+</div>
+</div>
 <div 
  style={{
       display:"flex",
-      flexDirection: "row",
-      gap: "10px",
+      flexDirection:"column",
+      gap: "6px",
       justifyContent: "flex-end",
+      height:500,
+      width:80,
+      paddingLeft:5
   }}
 >
-  <BoxSxColorCh main={'#00ff00'} dark={'#32cd32'} text={'اعادة ترتيب'} Icon={ChangeCircleIcon} textCol={'black'}/>
-  <BoxSxColorCh main={'#2f2c2c'} dark={'#000'} text={'تغيير المكان'} Icon={SyncAltIcon} textCol={'white'}/>
-  <BoxSxColorCh main={'#fbfbfbff'} dark={'#fff8dc'} text={'حذف اللون'} Icon={ClearIcon} textCol={'black'}/>
-  <BoxSxColorCh main={'#0066CC'} dark={'blue'} text={'تلوين بالازرق'} Icon={FormatColorFillIcon} textCol={'white'}/>
+<button 
+      style={{
+       background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    width: 75,   // نفس العرض متاع Box
+    height: 75,  // نفس الطول متاع Box
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+      }}
+      onClick={() => alert("en cours")}
+    >
+  <BoxSxColorCh main={'#ba55d3'} dark={'#c71585'} text={'سؤال جديد'} Icon={QuestionMarkIcon} textCol={'black'}/>
+  </button>
+  <button 
+      style={{
+       background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    width: 75,   // نفس العرض متاع Box
+    height: 75,  // نفس الطول متاع Box
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+      }}
+      onClick={() => changeColor("blue")}
+    >
+   <BoxSxColorCh main={'#0066CC'} dark={'blue'} text={'تلوين بالازرق'} Icon={FormatColorFillIcon} textCol={'white'}/>
+   </button>
+   <button 
+     style={{
+       background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    width: 75,   // نفس العرض متاع Box
+    height: 75,  // نفس الطول متاع Box
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+      }}
+      onClick={() => changeColor("red")}
+    >
   <BoxSxColorCh main={'#ef6868ff'} dark={'red'} text={'تلوين بالاحمر'} Icon={FormatColorFillIcon} textCol={'white'}/>
+  </button>
+   <button 
+      style={{
+       background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    width: 75,   // نفس العرض متاع Box
+    height: 75,  // نفس الطول متاع Box
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+      }}
+      onClick={() => changeColor("#fff8dc")}
+    >
+  <BoxSxColorCh main={'#fbfbfbff'} dark={'#fff8dc'} text={'حذف اللون'} Icon={ClearIcon} textCol={'black'}/>
+  </button>
+  <button 
+      style={{
+       background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    width: 75,   // نفس العرض متاع Box
+    height: 75,  // نفس الطول متاع Box
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+      }}
+      onClick={resetGrid}
+    >
+  <BoxSxColorCh main={'#00ff00'} dark={'#32cd32'} text={'اعادة ترتيب'} Icon={ChangeCircleIcon} textCol={'black'}/>
+  </button>
+  <button 
+      style={{
+       background: "none",
+    border: "none",
+    padding: 0,
+    cursor: "pointer",
+    width: 75,   // نفس العرض متاع Box
+    height: 75,  // نفس الطول متاع Box
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center"
+      }}
+      onClick={() => setOpen(true)}
+    >
+  <BoxSxColorCh main={'#2f2c2c'} dark={'#000'} text={'تغيير المكان'} Icon={SyncAltIcon} textCol={'white'}/>
+  </button>
+  
+ 
 </div>
 </div>
 
@@ -264,17 +429,73 @@ const cells5 = lettersGrid[4];
   href="https://www.tiktok.com/@bayto_chi3r?is_from_webapp=1&sender_device=pc" 
   target="_blank"  
   rel="noopener noreferrer" 
-  style={{ color: "#8b0000", textDecoration: "underline" }}
+  style={{ color: "#8b0000", textDecoration: "underline",margin:10 }}
 >
   رابط الصفحة 
 </a>
  <img 
     src={myImage}
-    style={{ width: "600px", marginTop: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)" }} 
+    style={{ width: "500px", marginTop: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0,0,0,0.3)" }} 
   />
 </div>
 
     </div>
+    <Drawer
+  anchor="right"
+  open={open}
+  onClose={() => setOpen(false)}
+  PaperProps={{
+    sx: {
+      background: "linear-gradient(to bottom, #808080, #000000)", 
+      color: "white",
+      width: 300,
+      padding: 2,
+    },
+  }}
+>
+  <h2 style={{ color: "#fff", direction: "rtl", textAlign: "center" }}>
+    تغيير حرف "{selectedLetter[0]?.letter}"
+  </h2>
+
+  {[0, 5, 10, 15, 20].map((start) => (
+    <div
+      key={start}
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: "10px",
+        padding: "10px",
+      }}
+    >
+      {lettersGrid2.slice(start, start + 5).map((cell, index) => (
+        <div
+          key={index}
+          style={{
+            width: "45px",
+            height: "45px",
+            borderRadius: "50%",
+            backgroundColor: "white",
+            color: "black",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontWeight: "bold",
+            fontSize: "1.3rem",
+            boxShadow: "0 0 4px rgba(0,0,0,0.3)",
+            cursor: "pointer",
+          }}
+           onClick={() => changePlace(cell, index + start)}
+        >
+          {cell.letter}
+        </div>
+      ))}
+    </div>
+  ))}
+</Drawer>
+
+
+
     <div
     style={{
     display: "flex",

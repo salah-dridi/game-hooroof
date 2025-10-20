@@ -15,8 +15,8 @@ export default function BoxSxColorCh({ main, dark, text, Icon,textCol}) {
     >
       <Box
         sx={{
-          width: 100,
-          height: 100,
+          width: "100%",
+          height: "100%",
           borderRadius: 5,
           bgcolor: 'primary.main',
           display: 'flex',
@@ -24,17 +24,18 @@ export default function BoxSxColorCh({ main, dark, text, Icon,textCol}) {
           alignItems: 'center',
           justifyContent: 'center',
           color: 'red',
+          gap:1,
           transition: 'all 0.3s ease-in-out', // تأثير ناعم
-          boxShadow: `0 0 10px ${main}`, // ضوء خفيف في الحالة العادية
+          boxShadow: `0 0 8px ${main}`, // ضوء خفيف في الحالة العادية
           '&:hover': {
             bgcolor: 'primary.dark',
-            boxShadow: `0 0 25px 5px ${dark}`, // يشع أكثر وقت hover
+            boxShadow: `0 0 20px 4px ${dark}`, // يشع أكثر وقت hover
             transform: 'scale(1.05)', // تكبر شوية عند المرور
           },
         }}
       >
-        {Icon && <Icon style={{ color: textCol, fontSize: 40 }} />}
-        <p style={{ color: textCol, margin: 0 }}>{text}</p>
+        {Icon && <Icon style={{ color: textCol, fontSize: 20 }} />}
+        <h4 style={{ color: textCol, margin: 0 }}>{text}</h4>
       </Box>
     </ThemeProvider>
   );
