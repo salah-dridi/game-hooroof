@@ -11,6 +11,7 @@ import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import Swal from 'sweetalert2';
+import CheckIcon from '@mui/icons-material/Check';
 function Typewriter({ text, speed = 1000 }) {
   const [displayedText, setDisplayedText] = useState('');
 
@@ -57,6 +58,9 @@ const [selectedLetter,setSelectedLetter]=useState([]) ;
 const[e,setE]=useState(0);
 const[e1,setE1]=useState(0);
 const[e2,setE2]=useState(0);
+const[ne1,setNe1]=useState();
+const[ne2,setNe2]=useState();
+const[eqs,setEqs]=useState(true);
 const toggleDivs = (cell,index) => {
   if(showDiv2){
     setShowDiv1(true);   
@@ -85,7 +89,9 @@ const getRandomArabicLetters = () => {
 
  return [...selected, ...letters];
 };
+const changeEq=()=>{
 
+}
 const [lettersGrid2,setLettersGrid2] = useState(() => {
   const arabicLettersUsed = getRandomArabicLetters();
   const withColor = arabicLettersUsed.map(letter => ({
@@ -179,22 +185,92 @@ const resetGrid = () => {
     <div style={{ position: "relative", width: 800, height: 200 }}>
     
       <QuadBackground />
-        <div style={{
-        display:"flex",
-  width:400,
-  height:70,
-  position:"absolute",
-  backgroundColor:'red',
+      {eqs ? (
+       <div style={{
+  display: "flex",
+  flexDirection: "row-reverse",
+  width: 400,
+  height: 70,
+  position: "absolute",
+  backgroundColor: 'red',
   background: "linear-gradient(to bottom, #808080, #000000)",
-  borderRadius:10,
-  top:"10%",
-  left:"25%",
-  justifyContent:"center"
-  }}>
-    <h3 style={{ color: "white", direction: "rtl", textAlign: "right" }}>
-      الفريق الازرق : {e1} || الفريق الاحمر : {e2}
-</h3>
+  borderRadius: 10,
+  top: "10%",
+  left: "25%",
+  justifyContent: "space-around",
+  alignItems: "center"
+}}>
+  <input
+    type="text"
+    placeholder="الفريق الأول"
+    value={ne1}
+    onChange={(e) => setNe1(e.target.value)}
+    style={{
+      width: 150,
+      borderRadius: 5,
+      border: "1px solid white",
+      textAlign: "center",
+      color: "white",
+      background: "transparent"
+    }}
+  />
+
+  <span style={{ color: "white" }}>||</span>
+
+  <input
+    type="text"
+    placeholder="الفريق الثاني"
+    value={ne2}
+    onChange={(e) => setNe2(e.target.value)}
+    style={{
+      width: 150,
+      borderRadius: 5,
+      border: "1px solid white",
+      textAlign: "center",
+      color: "white",
+      background: "transparent"
+    }}
+  />
+    <div
+  style={{
+    width: 20,
+    height: 20,
+    borderRadius: "50%",
+    backgroundColor: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer" 
+  }}
+  onClick={() => setEqs(false)}
+>
+  <CheckIcon style={{ fontSize: 16, color: "green" }} />
 </div>
+
+</div> 
+) : (
+ <div style={{ display:"flex", width:400, height:70, position:"absolute", backgroundColor:'red', background: "linear-gradient(to bottom, #808080, #000000)", borderRadius:10, top:"10%", left:"25%", justifyContent:"center" }}>
+   <div
+  style={{
+    width: 20,
+    height: 20,
+    borderRadius: "50%",
+    backgroundColor: "white",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer" ,
+    marginTop:20,
+    marginRight:20
+  }}
+  onClick={() => setEqs(true)}
+>
+  <CheckIcon style={{ fontSize: 16, color: "green" }} />
+</div>
+   <h3 style={{ color: "white", direction: "rtl", textAlign: "right" }}> {ne1}: {e1} || {ne2}: {e2} </h3>
+   </div>
+)}
+
       <div style={{
         display: "flex",
         justifyContent: "space-between",
@@ -202,7 +278,8 @@ const resetGrid = () => {
         position: "absolute",
         top: "75%",
         left: "59%",
-        transform: "translate(-60%, -50%)"
+        transform: "translate(-60%, -50%)",
+       
       }}>
          {lettersGrid2.slice(0, 5).map((cell, index) => (
            <button 

@@ -20,7 +20,7 @@ const QuadBackground = () => (
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "#00ced1",
+        backgroundColor: "#0000cd",
         clipPath: "polygon(0 0, 100% 0, 50% 50%)",
       }}
     />
@@ -32,7 +32,7 @@ const QuadBackground = () => (
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "#00ced1",
+        backgroundColor: "#0000cd",
         clipPath: "polygon(0% 100%, 100% 100%, 50% 50%)",
       }}
     />
@@ -44,7 +44,7 @@ const QuadBackground = () => (
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "#e9967a",
+        backgroundColor: "#800000",
         clipPath: "polygon(0 0, 0 100%, 50% 50%)",
       }}
     />
@@ -56,7 +56,7 @@ const QuadBackground = () => (
         left: 0,
         width: "100%",
         height: "100%",
-        backgroundColor: "#e9967a",
+        backgroundColor: "#800000",
         clipPath: "polygon(100% 0, 100% 100%, 50% 50%)",
       }}
     />
