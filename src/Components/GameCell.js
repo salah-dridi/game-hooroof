@@ -54,6 +54,9 @@ const GameRow = () => {
   const [showDiv1, setShowDiv1] = useState(false); 
 const [showDiv2, setShowDiv2] = useState(true); 
 const [selectedLetter,setSelectedLetter]=useState([]) ;
+const[e,setE]=useState(0);
+const[e1,setE1]=useState(0);
+const[e2,setE2]=useState(0);
 const toggleDivs = (cell,index) => {
   if(showDiv2){
     setShowDiv1(true);   
@@ -92,8 +95,25 @@ const [lettersGrid2,setLettersGrid2] = useState(() => {
   return withColor;
 });
 
-const changeColor = (col) => {
+const changeColor = (col,nb) => {
   let newCells=[...lettersGrid2]
+  if(nb==0){
+    if(selectedLetter[0].color=="red"){
+      setE2(e2-1);
+    }else if(selectedLetter[0].color=="blue"){setE1(e1-1)};
+  }else if((nb==1)&&(selectedLetter[0].color!="blue")){
+    setE(e+1);
+    if(selectedLetter[0].color=="red"){
+      setE2(e2-1);
+      setE1(e1+1);
+    }else setE1(e1+1);
+  }else if((nb==2)&&(selectedLetter[0].color!="red")) {
+    setE(e+1);
+    if(selectedLetter[0].color=="blue"){
+      setE2(e2+1);
+      setE1(e1-1);
+    }else setE2(e2+1);
+  }
   newCells[selectedLetter[1]].color=col
   setLettersGrid2(newCells)
 
@@ -122,6 +142,9 @@ const changePlace = (cell, index) => {
   });
 };
 const resetGrid = () => {
+  setE(0)
+  setE1(0)
+  setE2(0)
   const arabicLettersUsed = getRandomArabicLetters();
   const withColor = arabicLettersUsed.map(letter => ({
     letter: letter,
@@ -154,7 +177,24 @@ const resetGrid = () => {
   }}
 >
     <div style={{ position: "relative", width: 800, height: 200 }}>
+    
       <QuadBackground />
+        <div style={{
+        display:"flex",
+  width:400,
+  height:70,
+  position:"absolute",
+  backgroundColor:'red',
+  background: "linear-gradient(to bottom, #808080, #000000)",
+  borderRadius:10,
+  top:"10%",
+  left:"25%",
+  justifyContent:"center"
+  }}>
+    <h3 style={{ color: "white", direction: "rtl", textAlign: "right" }}>
+      الفريق الازرق : {e1} || الفريق الاحمر : {e2}
+</h3>
+</div>
       <div style={{
         display: "flex",
         justifyContent: "space-between",
@@ -348,7 +388,7 @@ const resetGrid = () => {
     alignItems: "center",
     justifyContent: "center"
       }}
-      onClick={() => changeColor("blue")}
+      onClick={() => changeColor("blue",1)}
     >
    <BoxSxColorCh main={'#0066CC'} dark={'blue'} text={'تلوين بالازرق'} Icon={FormatColorFillIcon} textCol={'white'}/>
    </button>
@@ -364,7 +404,7 @@ const resetGrid = () => {
     alignItems: "center",
     justifyContent: "center"
       }}
-      onClick={() => changeColor("red")}
+      onClick={() => changeColor("red",2)}
     >
   <BoxSxColorCh main={'#ef6868ff'} dark={'red'} text={'تلوين بالاحمر'} Icon={FormatColorFillIcon} textCol={'white'}/>
   </button>
@@ -380,7 +420,7 @@ const resetGrid = () => {
     alignItems: "center",
     justifyContent: "center"
       }}
-      onClick={() => changeColor("#fff8dc")}
+      onClick={() => changeColor("#fff8dc",0)}
     >
   <BoxSxColorCh main={'#fbfbfbff'} dark={'#fff8dc'} text={'حذف اللون'} Icon={ClearIcon} textCol={'black'}/>
   </button>
