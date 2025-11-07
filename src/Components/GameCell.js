@@ -12,6 +12,7 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import Swal from 'sweetalert2';
 import CheckIcon from '@mui/icons-material/Check';
+import { pipeline } from "@xenova/transformers";
 function Typewriter({ text, speed = 1000 }) {
   const [displayedText, setDisplayedText] = useState('');
 
@@ -61,6 +62,8 @@ const[e2,setE2]=useState(0);
 const[ne1,setNe1]=useState();
 const[ne2,setNe2]=useState();
 const[eqs,setEqs]=useState(true);
+const[quest,setQuest]=useState();
+const[rep,setRep]=useState();
 const toggleDivs = (cell,index) => {
   if(showDiv2){
     setShowDiv1(true);   
@@ -69,6 +72,18 @@ const toggleDivs = (cell,index) => {
 setSelectedLetter([cell,index]);
    
 };
+const questionsList = [
+  { question: "ما هي عاصمة تونس؟", reponse: "تونس", lettre: "ت" },
+  { question: "ما هو أكبر كوكب في المجموعة الشمسية؟", reponse: "المشتري", lettre: "م" },
+  { question: "كم عدد أيام السنة؟", reponse: "365", lettre: "3" },
+  { question: "ما هو الحيوان المعروف بملك الغابة؟", reponse: "الأسد", lettre: "ا" },
+  { question: "ما هو العنصر الكيميائي الذي رمزه O؟", reponse: "الأكسجين", lettre: "ا" },
+  { question: "ما هو الحيوان الذي يطير ليلاً ويستخدم الصدى؟", reponse: "الخفاش", lettre: "خ" },
+  { question: "ما هو الكوكب الأحمر؟", reponse: "المريخ", lettre: "م" },
+  { question: "ما هو أسرع حيوان بري؟", reponse: "الفهد", lettre: "ف" },
+  { question: "ما هو البحر الذي يفصل بين السعودية ومصر؟", reponse: "البحر الأحمر", lettre: "ب" },
+  { question: "ما هو أكبر محيط على الأرض؟", reponse: "المحيط الهادئ", lettre: "م" }
+];
 
 
 const arabicLetters = [
@@ -89,9 +104,41 @@ const getRandomArabicLetters = () => {
 
  return [...selected, ...letters];
 };
-const changeEq=()=>{
 
+
+async function changeQuest() {
+  if (!selectedLetter[0]) return; // إذا ما تمش اختيار حرف
+  const currentLetter = selectedLetter[0].letter;
+
+  // فلترة الأسئلة اللي نفس الحرف
+  let filteredQuestions = questionsList.filter(q => q.lettre === currentLetter);
+
+  // جلب الأسئلة اللي تم طرحها مسبقًا من localStorage
+  let asked = JSON.parse(localStorage.getItem("askedQuestions")) || [];
+
+  // فلترة الأسئلة اللي ما ظهرتش بعد
+  filteredQuestions = filteredQuestions.filter(q => !asked.includes(q.question));
+
+  if (filteredQuestions.length === 0) {
+    setQuest("لا يوجد سؤال جديد لهذا الحرف");
+    setRep("");
+    return;
+  }
+
+  // اختيار سؤال عشوائي
+  const randomIndex = Math.floor(Math.random() * filteredQuestions.length);
+  const randomQuestion = filteredQuestions[randomIndex];
+
+  setQuest(randomQuestion.question);
+  setRep(randomQuestion.reponse);
+
+  // إضافة السؤال لليستة وحفظه في localStorage
+  asked.push(randomQuestion.question);
+  localStorage.setItem("askedQuestions", JSON.stringify(asked));
 }
+
+
+
 const [lettersGrid2,setLettersGrid2] = useState(() => {
   const arabicLettersUsed = getRandomArabicLetters();
   const withColor = arabicLettersUsed.map(letter => ({
@@ -416,15 +463,29 @@ const resetGrid = () => {
       <h1 style={{ color: "#8b0000", direction: "rtl", textAlign: "right" }}>
   قائمة الاختيارات : "{selectedLetter[0]?.letter}"
 </h1>
-<div style={{
-  width:600,
-  height:90,
-  backgroundColor:'red',
-  background: "linear-gradient(to bottom, #808080, #000000)",
-  borderRadius:10
-  }}>
-
+<div
+  style={{
+    width: 600,
+    height: 200,
+    backgroundColor: 'red',
+    background: 'linear-gradient(to bottom, #808080, #000000)',
+    borderRadius: 10,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    fontFamily: 'Arial, sans-serif',
+  }}
+>
+ <h2 style={{ color: "white", direction: "rtl", textAlign: "right" }}>
+  السؤال: "{quest}"
+</h2>
+<h3 style={{ color: "white", direction: "rtl", textAlign: "right" }}>
+  الاجابة: "{rep}"
+</h3>
 </div>
+
 </div>
 <div 
  style={{
@@ -449,7 +510,7 @@ const resetGrid = () => {
     alignItems: "center",
     justifyContent: "center"
       }}
-      onClick={() => alert("en cours")}
+       onClick={changeQuest}
     >
   <BoxSxColorCh main={'#ba55d3'} dark={'#c71585'} text={'سؤال جديد'} Icon={QuestionMarkIcon} textCol={'black'}/>
   </button>

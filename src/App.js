@@ -1,13 +1,15 @@
-import GameCell from './Components/GameCell';
-import Hexagon from './Components/Hexagon';
-import QuadBackground from './Components/QuadBackground';
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import FileUploadExcel from "./Components/FileUploadExcel";
+import GameRow from "./Components/GameCell";
 
-function App() {
+const App = () => {
   return (
-    <div>
-    <GameCell/>
-    </div>
+    <Routes>
+      <Route path="/" element={<FileUploadExcel />} />
+      <Route path="/gamerow" element={<GameRow />} />
+    </Routes>
   );
-}
+};
 
 export default App;
