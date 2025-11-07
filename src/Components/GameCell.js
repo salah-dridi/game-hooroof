@@ -12,7 +12,6 @@ import SyncAltIcon from '@mui/icons-material/SyncAlt';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import Swal from 'sweetalert2';
 import CheckIcon from '@mui/icons-material/Check';
-import { pipeline } from "@xenova/transformers";
 function Typewriter({ text, speed = 1000 }) {
   const [displayedText, setDisplayedText] = useState('');
 
@@ -72,18 +71,23 @@ const toggleDivs = (cell,index) => {
 setSelectedLetter([cell,index]);
    
 };
-const questionsList = [
-  { question: "ما هي عاصمة تونس؟", reponse: "تونس", lettre: "ت" },
-  { question: "ما هو أكبر كوكب في المجموعة الشمسية؟", reponse: "المشتري", lettre: "م" },
-  { question: "كم عدد أيام السنة؟", reponse: "365", lettre: "3" },
-  { question: "ما هو الحيوان المعروف بملك الغابة؟", reponse: "الأسد", lettre: "ا" },
-  { question: "ما هو العنصر الكيميائي الذي رمزه O؟", reponse: "الأكسجين", lettre: "ا" },
-  { question: "ما هو الحيوان الذي يطير ليلاً ويستخدم الصدى؟", reponse: "الخفاش", lettre: "خ" },
-  { question: "ما هو الكوكب الأحمر؟", reponse: "المريخ", lettre: "م" },
-  { question: "ما هو أسرع حيوان بري؟", reponse: "الفهد", lettre: "ف" },
-  { question: "ما هو البحر الذي يفصل بين السعودية ومصر؟", reponse: "البحر الأحمر", lettre: "ب" },
-  { question: "ما هو أكبر محيط على الأرض؟", reponse: "المحيط الهادئ", lettre: "م" }
-];
+const loadQuestionsFromStorage = () => {
+  let list = [];
+
+  for (let i = 1; i <= localStorage.length; i++) {
+    const item = localStorage.getItem(`row-${i}`);
+    if (item) {
+      const parsed = JSON.parse(item);
+      if (parsed.question && parsed.reponse && parsed.lettre) {
+        list.push(parsed);
+      }
+    }
+  }
+
+  return list;
+};
+
+const questionsList = loadQuestionsFromStorage();
 
 
 const arabicLetters = [
