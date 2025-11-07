@@ -6,7 +6,7 @@ import GameRow from "./Components/GameCell";
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<FileUploadExcel />} />
+      <Route path="/game-hooroof" element={<FileUploadExcel />} />
       <Route path="/gamerow" element={<GameRow />} />
     </Routes>
   );
